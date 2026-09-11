@@ -119,7 +119,21 @@
   .ph svg{ width:26%; height:26%; opacity:.7; }
   .ph img{
     position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover;
+    object-fit:cover; cursor:zoom-in;
+  }
+
+  /* ---------- lightbox ---------- */
+  .lightbox{
+    position:fixed; inset:0; z-index:100;
+    background:rgba(20,6,12,.9);
+    display:none; align-items:center; justify-content:center;
+    padding:30px; cursor:zoom-out;
+    opacity:0; transition:opacity .25s ease;
+  }
+  .lightbox.open{ display:flex; opacity:1; }
+  .lightbox img{
+    max-width:min(90vw,520px); max-height:85vh;
+    border-radius:3px; box-shadow:0 24px 60px rgba(0,0,0,.55);
   }
 
   /* ---------- polaroid ---------- */
@@ -401,6 +415,7 @@
 
 <footer>made with love, just for you</footer>
 
+<div class="lightbox" id="lightbox"><img id="lightboxImg" src="" alt=""></div>
 
 
 <script>
@@ -431,6 +446,19 @@
     });
   }, { threshold:.5 });
   sections.forEach(s=>navIo.observe(s));
+
+  // photos — tap to view full size
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  document.querySelectorAll('.ph img').forEach(img=>{
+    img.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      if(img.style.display === 'none' || !img.complete || img.naturalWidth === 0) return; // no photo added yet
+      lightboxImg.src = img.src;
+      lightbox.classList.add('open');
+    });
+  });
+  lightbox.addEventListener('click', ()=> lightbox.classList.remove('open'));
 
   // vinyl spin + song playback on tap
   const vinylWrap = document.getElementById('vinylWrap');
