@@ -209,9 +209,23 @@
   .letter-photos .polaroid{ position:absolute; width:150px; }
   .letter-photos .polaroid:nth-child(1){ top:0; left:0; transform:rotate(-7deg); z-index:1; }
   .letter-photos .polaroid:nth-child(2){ top:20px; left:24px; transform:rotate(5deg); z-index:2; }
-  .letter-text{ flex:1; min-width:240px; max-width:340px; }
-  .letter-text p{ font-size:.95rem; color:var(--cream); opacity:.9; }
-  .signature{ font-family:'Petit Formal Script', cursive; font-size:1.4rem; color:var(--gold-soft); margin-top:10px; }
+  .letter-card{
+    flex:1; min-width:240px; max-width:340px;
+    background:var(--paper); color:var(--ink);
+    padding:26px 24px 18px; border-radius:2px;
+    box-shadow:0 16px 32px rgba(0,0,0,.35);
+    cursor:pointer; -webkit-tap-highlight-color:transparent;
+    min-height:190px; display:flex; flex-direction:column; justify-content:space-between;
+    text-align:left;
+  }
+  .letter-page{ display:none; opacity:0; transform:translateX(14px); transition:opacity .35s ease, transform .35s ease; }
+  .letter-page.active{ display:block; opacity:1; transform:translateX(0); }
+  .letter-page p{ font-size:.95rem; color:var(--ink); }
+  .signature{ font-family:'Petit Formal Script', cursive; font-size:1.4rem; color:var(--wine); margin-top:10px; }
+  .letter-pagination{ display:flex; gap:6px; justify-content:center; margin-top:16px; }
+  .letter-pagination .dot{ width:6px; height:6px; border-radius:50%; background:rgba(58,20,32,.22); transition:background .3s ease; }
+  .letter-pagination .dot.active{ background:var(--wine); }
+  .letter-hint{ font-size:.72rem; color:var(--ink-soft); text-align:center; margin-top:8px; opacity:.75; }
 
   /* ============ SECTION 8 — LITTLE THINGS ============ */
   .corkboard{ display:flex; gap:18px; justify-content:center; align-items:flex-start; flex-wrap:wrap; margin-top:14px; }
@@ -354,9 +368,19 @@
         <figure class="polaroid"><div class="ph"><img src="photos/letter-1.jpg" alt="" onerror="this.style.display='none'"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg></div></figure>
         <figure class="polaroid"><div class="ph"><img src="photos/letter-2.jpg" alt="" onerror="this.style.display='none'"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg></div></figure>
       </div>
-      <div class="letter-text">
-        <p>Write your letter here — the things you don't say enough, the memories you keep coming back to, the reasons this person matters. Let it sound like you, not like a card.</p>
-        <p class="signature">— always yours</p>
+      <div class="letter-card" id="letterCard" tabindex="0" role="button" aria-label="Tap to read the next page of the letter">
+        <div class="letter-page active" data-page="1">
+          <p>Write the first part of your letter here — how you're feeling as you sit down to write this, or how the day started.</p>
+        </div>
+        <div class="letter-page" data-page="2">
+          <p>Write the middle part here — a memory, an inside joke, something specific only the two of you would understand.</p>
+        </div>
+        <div class="letter-page" data-page="3">
+          <p>Write your closing thoughts here — what you hope for them, what they mean to you.</p>
+          <p class="signature">— always yours</p>
+        </div>
+        <div class="letter-pagination" id="letterDots"></div>
+        <p class="letter-hint" id="letterHint">tap to keep reading</p>
       </div>
     </div>
   </div>
@@ -427,6 +451,35 @@
   songAudio.addEventListener('ended', ()=>{
     vinyl.classList.remove('spin');
     songHint.textContent = 'tap the vinyl to play it';
+  });
+
+  // letter — click to flip through pages
+  const letterCard = document.getElementById('letterCard');
+  const letterPages = letterCard.querySelectorAll('.letter-page');
+  const letterDotsWrap = document.getElementById('letterDots');
+  const letterHint = document.getElementById('letterHint');
+  letterPages.forEach((_, i)=>{
+    const d = document.createElement('span');
+    d.className = 'dot' + (i===0 ? ' active' : '');
+    letterDotsWrap.appendChild(d);
+  });
+  const letterDots = letterDotsWrap.querySelectorAll('.dot');
+  let letterPage = 0;
+  function showLetterPage(i){
+    letterPages.forEach((p, idx)=> p.classList.toggle('active', idx===i));
+    letterDots.forEach((d, idx)=> d.classList.toggle('active', idx===i));
+    letterHint.textContent = i === letterPages.length-1 ? 'tap to read it again' : 'tap to keep reading';
+  }
+  letterCard.addEventListener('click', ()=>{
+    letterPage = (letterPage + 1) % letterPages.length;
+    showLetterPage(letterPage);
+  });
+  letterCard.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter' || e.key===' '){
+      e.preventDefault();
+      letterPage = (letterPage + 1) % letterPages.length;
+      showLetterPage(letterPage);
+    }
   });
 
   // gentle confetti burst on cover load
