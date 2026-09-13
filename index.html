@@ -196,6 +196,7 @@
   /* ============ SECTION 4 — SONG ============ */
   .vinyl-wrap{ display:flex; justify-content:center; margin:14px 0 26px; cursor:pointer; }
   .vinyl{ width:210px; height:210px; animation:spin 9s linear infinite; }
+  .vinyl-label-photo{ cursor:zoom-in; }
   .vinyl.spin{ animation-duration:3s; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
 
@@ -333,7 +334,7 @@
     </div>
     <p class="eyebrow reveal">happy birthday</p>
     <h2 class="cover-name reveal">Vanesha</h2>
-    <p class="cover-date reveal">27 / 10 / 2026</p>
+    <p class="cover-date reveal">09 / 09 / 2026</p>
     <p class="cover-quote reveal">Happy birthday, my love — a little letter made just for you.</p>
     <div class="heart-row reveal">♡ ♡ ♡</div>
   </div>
@@ -374,11 +375,26 @@
     <h2 class="reveal">This <span class="script">song</span> reminds me of you</h2>
     <div class="vinyl-wrap reveal" id="vinylWrap">
       <svg class="vinyl" id="vinyl" viewBox="0 0 200 200">
+        <defs>
+          <clipPath id="vinylLabelClip"><circle cx="100" cy="100" r="34"/></clipPath>
+        </defs>
         <circle cx="100" cy="100" r="98" fill="#1c1c1c"/>
         <circle cx="100" cy="100" r="82" fill="none" stroke="#333" stroke-width="1"/>
         <circle cx="100" cy="100" r="68" fill="none" stroke="#333" stroke-width="1"/>
         <circle cx="100" cy="100" r="54" fill="none" stroke="#333" stroke-width="1"/>
+        <!-- scuff marks so the rotation is visible -->
+        <path d="M100,18 L100,42" stroke="#3a3a3a" stroke-width="2" stroke-linecap="round"/>
+        <path d="M168,140 L150,128" stroke="#3a3a3a" stroke-width="2" stroke-linecap="round"/>
+        <path d="M40,150 L54,134" stroke="#2c2c2c" stroke-width="2" stroke-linecap="round"/>
+        <!-- diagonal glare -->
+        <ellipse cx="70" cy="70" rx="46" ry="14" fill="#ffffff" opacity=".06" transform="rotate(-35 70 70)"/>
+        <!-- label: shows your photo once added, camera icon until then -->
         <circle cx="100" cy="100" r="34" fill="#c79a55"/>
+        <g id="vinylLabelIcon" fill="none" stroke="#3d0f1f" stroke-width="1.4">
+          <path d="M87,93h4l2-3h14l2,3h4a1,1 0 011,1v15a1,1 0 01-1,1H87a1,1 0 01-1-1V94a1,1 0 011-1z"/>
+          <circle cx="100" cy="101" r="5"/>
+        </g>
+        <image id="vinylLabelImg" class="vinyl-label-photo" href="photos/vinyl-label.jpg" x="66" y="66" width="68" height="68" preserveAspectRatio="xMidYMid slice" clip-path="url(#vinylLabelClip)" onerror="this.style.display='none'" onload="document.getElementById('vinylLabelIcon').style.display='none'"/>
         <circle cx="100" cy="100" r="5" fill="#1c1c1c"/>
       </svg>
     </div>
@@ -576,6 +592,15 @@
     });
   });
   lightbox.addEventListener('click', ()=> lightbox.classList.remove('open'));
+
+  // vinyl label photo — tap to view full size, without toggling play/pause
+  const vinylLabelImg = document.getElementById('vinylLabelImg');
+  vinylLabelImg.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    if(vinylLabelImg.style.display === 'none') return; // no photo added yet
+    lightboxImg.src = vinylLabelImg.getAttribute('href');
+    lightbox.classList.add('open');
+  });
 
   // vinyl spin + song playback on tap
   const vinylWrap = document.getElementById('vinylWrap');
