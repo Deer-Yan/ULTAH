@@ -196,10 +196,11 @@
   /* ============ SECTION 4 — SONG ============ */
   .vinyl-wrap{ display:flex; justify-content:center; margin:14px 0 26px; cursor:pointer; }
   .vinyl{ width:210px; height:210px; animation:spin 9s linear infinite; }
-  .vinyl-label-photo{ cursor:zoom-in; }
   .vinyl.spin{ animation-duration:3s; }
+  .vinyl-label-photo{ cursor:zoom-in; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
-
+  .song-title{ font-family:'Playfair Display', serif; font-style:italic; font-size:1.2rem; margin-bottom:4px; }
+  .song-sub{ font-size:.85rem; color:var(--ink-soft); }
   .song-seek{
     -webkit-appearance:none; appearance:none;
     width:220px; max-width:80vw; height:4px; border-radius:2px;
@@ -221,8 +222,6 @@
     display:flex; justify-content:space-between; width:220px; max-width:80vw;
     margin:0 auto; font-size:.7rem; color:var(--ink-soft); opacity:.75;
   }
-  .song-title{ font-family:'Playfair Display', serif; font-style:italic; font-size:1.2rem; margin-bottom:4px; }
-  .song-sub{ font-size:.85rem; color:var(--ink-soft); }
   .song-hint{ font-size:.8rem; color:var(--ink-soft); margin-top:16px; opacity:.8; }
 
   /* ============ SECTION 5 — REASONS ============ */
@@ -241,15 +240,17 @@
   .words-row .polaroid figcaption{ text-transform:lowercase; font-size:1.3rem; color:var(--wine); }
 
   /* ============ SECTION 7 — LETTER FOR YOU ============ */
-  .letter-wrap{ display:flex; flex-direction:column; gap:22px; align-items:center; text-align:left; }
-  .letter-photo-carousel{ position:relative; width:150px; flex:none; }
-  .carousel-track{ display:flex; transition:transform .5s cubic-bezier(.65,0,.35,1); }
-  .carousel-slide{ flex:0 0 100%; }
-  .carousel-track{ touch-action:pan-y; cursor:grab; }
-  .carousel-track:active{ cursor:grabbing; }
-  .carousel-dots{ display:flex; gap:6px; justify-content:center; margin-top:12px; }
-  .carousel-dots .dot{ width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.35); cursor:pointer; transition:background .3s ease; }
-  .carousel-dots .dot.active{ background:var(--gold-soft); }
+  .letter-wrap{ display:flex; flex-direction:row; flex-wrap:wrap; gap:22px; align-items:center; justify-content:center; text-align:left; }
+  .letter-photo-stack{
+    position:relative; width:150px; height:186px; flex:none;
+    cursor:pointer; -webkit-tap-highlight-color:transparent;
+  }
+  .stack-photo{
+    position:absolute; top:0; left:0; width:150px;
+    transition:transform .5s cubic-bezier(.65,0,.35,1);
+  }
+  .stack-photo.pos-front{ transform:translate(0,0) rotate(-3deg) scale(1); z-index:2; }
+  .stack-photo.pos-back{ transform:translate(12px,16px) rotate(6deg) scale(.94); z-index:1; }
   .letter-card{
     flex:1; min-width:240px; max-width:340px;
     background:var(--paper); color:var(--ink);
@@ -330,11 +331,11 @@
       <div class="ph"><img src="photos/cover.jpg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'">
         <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg>
       </div>
-      <figcaption>Vanesha Prescilla</figcaption>
+      <figcaption>their name</figcaption>
     </div>
     <p class="eyebrow reveal">happy birthday</p>
     <h2 class="cover-name reveal">Vanesha</h2>
-    <p class="cover-date reveal">09 / 09 / 2026</p>
+    <p class="cover-date reveal">27 / 10 / 2026</p>
     <p class="cover-quote reveal">Happy birthday, my love — a little letter made just for you.</p>
     <div class="heart-row reveal">♡ ♡ ♡</div>
   </div>
@@ -442,14 +443,9 @@
   <div class="slide-inner">
     <h2 class="reveal">A <span class="script">Letter</span> for You</h2>
     <div class="letter-wrap reveal">
-      <div class="letter-photo-carousel" id="letterCarousel">
-        <div class="carousel-track" id="carouselTrack">
-          <figure class="polaroid carousel-slide"><div class="ph"><img src="photos/letter-1.jpg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg></div></figure>
-          <figure class="polaroid carousel-slide"><div class="ph"><img src="photos/letter-2.jpg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg></div></figure>
-          <figure class="polaroid carousel-slide"><div class="ph"><img src="photos/letter-3.jpg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg></div></figure>
-          <figure class="polaroid carousel-slide"><div class="ph"><img src="photos/letter-4.jpg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg></div></figure>
-        </div>
-        <div class="carousel-dots" id="carouselDots"></div>
+      <div class="letter-photo-stack" id="letterStack" role="button" tabindex="0" aria-label="Tap to swap the photos">
+        <figure class="polaroid stack-photo pos-front" id="stackPhotoA"><div class="ph"><img src="photos/letter-1.jpg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg></div></figure>
+        <figure class="polaroid stack-photo pos-back" id="stackPhotoB"><div class="ph"><img src="photos/letter-2.jpg" alt="" onerror="this.style.display='none'" onload="this.nextElementSibling.style.display='none'"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 011 1v11a1 1 0 01-1 1H4a1 1 0 01-1-1V8a1 1 0 011-1z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="13" r="3.4" stroke="currentColor" stroke-width="1.4"/></svg></div></figure>
       </div>
       <div class="letter-card" id="letterCard" tabindex="0" role="button" aria-label="Tap to read the next page of the letter">
         <div class="letter-page active" data-page="1">
@@ -489,50 +485,18 @@
 
 
 <script>
-  // letter photo carousel
-  const carouselTrack = document.getElementById('carouselTrack');
-  const carouselSlides = carouselTrack.querySelectorAll('.carousel-slide');
-  const carouselDotsWrap = document.getElementById('carouselDots');
-  carouselSlides.forEach((_, i)=>{
-    const d = document.createElement('span');
-    d.className = 'dot' + (i===0 ? ' active' : '');
-    d.addEventListener('click', ()=> goToSlide(i));
-    carouselDotsWrap.appendChild(d);
+  // letter photo stack — tap to swap which photo is on top
+  const letterStack = document.getElementById('letterStack');
+  function swapStack(){
+    const front = letterStack.querySelector('.pos-front');
+    const back = letterStack.querySelector('.pos-back');
+    front.classList.remove('pos-front'); front.classList.add('pos-back');
+    back.classList.remove('pos-back'); back.classList.add('pos-front');
+  }
+  letterStack.addEventListener('click', swapStack);
+  letterStack.addEventListener('keydown', (e)=>{
+    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); swapStack(); }
   });
-  const carouselDots = carouselDotsWrap.querySelectorAll('.dot');
-  let carouselIndex = 0;
-  function goToSlide(i){
-    carouselIndex = (i + carouselSlides.length) % carouselSlides.length;
-    carouselTrack.style.transform = `translateX(-${carouselIndex * 100}%)`;
-    carouselDots.forEach((d, idx)=> d.classList.toggle('active', idx===carouselIndex));
-  }
-  // drag / swipe the photo directly
-  let isDragging = false, dragStartX = 0, trackWidth = 0;
-  function dragStart(e){
-    isDragging = true;
-    dragStartX = e.clientX;
-    trackWidth = carouselTrack.parentElement.getBoundingClientRect().width;
-    carouselTrack.style.transition = 'none';
-    carouselTrack.setPointerCapture(e.pointerId);
-  }
-  function dragMove(e){
-    if(!isDragging) return;
-    const dx = e.clientX - dragStartX;
-    carouselTrack.style.transform = `translateX(${-carouselIndex * trackWidth + dx}px)`;
-  }
-  function dragEnd(e){
-    if(!isDragging) return;
-    isDragging = false;
-    const dx = e.clientX - dragStartX;
-    carouselTrack.style.transition = 'transform .45s cubic-bezier(.65,0,.35,1)';
-    if(dx < -40) goToSlide(carouselIndex + 1);
-    else if(dx > 40) goToSlide(carouselIndex - 1);
-    else goToSlide(carouselIndex);
-  }
-  carouselTrack.addEventListener('pointerdown', dragStart);
-  carouselTrack.addEventListener('pointermove', dragMove);
-  carouselTrack.addEventListener('pointerup', dragEnd);
-  carouselTrack.addEventListener('pointerleave', dragEnd);
 
   // floating hearts across the whole page
   const heartsBg = document.getElementById('heartsBg');
@@ -628,7 +592,6 @@
   const songCurrent = document.getElementById('songCurrent');
   const songDuration = document.getElementById('songDuration');
   let isScrubbing = false;
-
   function formatTime(t){
     if(!isFinite(t)) return '0:00';
     const m = Math.floor(t/60);
@@ -638,7 +601,6 @@
   function paintSeek(pct){
     songSeek.style.background = `linear-gradient(to right, var(--wine) ${pct}%, rgba(58,20,32,.15) ${pct}%)`;
   }
-
   songAudio.addEventListener('loadedmetadata', ()=>{
     songDuration.textContent = formatTime(songAudio.duration);
   });
