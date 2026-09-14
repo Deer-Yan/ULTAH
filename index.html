@@ -240,10 +240,11 @@
   .words-row .polaroid figcaption{ text-transform:lowercase; font-size:1.3rem; color:var(--wine); }
 
   /* ============ SECTION 7 — LETTER FOR YOU ============ */
-  .letter-wrap{ display:flex; flex-direction:row; flex-wrap:wrap; gap:22px; align-items:center; justify-content:center; text-align:left; }
+  .letter-wrap{ display:flex; flex-direction:row; flex-wrap:wrap; gap:22px; align-items:flex-start; justify-content:center; text-align:left; }
   .letter-photo-stack{
     position:relative; width:150px; height:186px; flex:none;
     cursor:pointer; -webkit-tap-highlight-color:transparent;
+    margin-right:10px; margin-top:-14px;
   }
   .stack-photo{
     position:absolute; top:0; left:0; width:150px;
