@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="intro-lock">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -315,9 +315,95 @@
     90%{ opacity:.6; }
     100%{ transform:translateY(-110vh) translateX(0) rotate(360deg); opacity:0; }
   }
+
+  /* ---------- intro envelope screen ---------- */
+  html.intro-lock, html.intro-lock body{ overflow:hidden; height:100%; }
+
+  .intro-overlay{
+    position:fixed; inset:0; z-index:300;
+    background:linear-gradient(180deg,var(--wine-deep),var(--wine) 60%,var(--wine-deep));
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity .7s ease, visibility .7s ease;
+  }
+  .intro-overlay.gone{ opacity:0; visibility:hidden; pointer-events:none; }
+
+  .envelope-scene{ position:relative; display:flex; flex-direction:column; align-items:center; perspective:1200px; z-index:2; }
+
+  .envelope{ position:relative; width:min(70vw,240px); aspect-ratio:240/160; }
+
+  .envelope-pocket{
+    position:absolute; inset:0;
+    background:var(--paper);
+    border:2px solid var(--gold);
+    border-radius:6px;
+    clip-path:polygon(0 0,50% 42%,100% 0,100% 100%,0 100%);
+  }
+
+  .envelope-letter{
+    position:absolute; left:8%; right:8%; top:10%; height:72%;
+    background:var(--cream); border-radius:2px;
+    box-shadow:0 6px 16px rgba(0,0,0,.25);
+    padding:14px 12px; text-align:left;
+    transform:translateY(6%);
+    transition:transform 1s cubic-bezier(.34,1.56,.64,1) .35s;
+    z-index:1;
+  }
+  .envelope-letter-title{ font-family:'Petit Formal Script', cursive; color:var(--wine); font-size:1rem; margin:0 0 8px; }
+  .envelope-letter-line{ height:6px; border-radius:3px; background:rgba(92,25,48,.14); margin:0 0 7px; }
+  .envelope-letter-line.short{ width:60%; }
+
+  .envelope-flap{
+    position:absolute; top:0; left:50%; width:0; height:0;
+    border-left:min(35vw,120px) solid transparent;
+    border-right:min(35vw,120px) solid transparent;
+    border-top:64px solid var(--wine-light);
+    transform:translateX(-50%) rotateX(0deg);
+    transform-origin:top center;
+    transition:transform 1s cubic-bezier(.65,0,.35,1);
+    z-index:2;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));
+  }
+
+  .envelope-stamp{
+    position:absolute; top:10px; right:10px; width:44px; height:44px;
+    border-radius:4px; border:2px dashed var(--wine-deep);
+    background:var(--gold-soft); color:var(--wine-deep);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.2rem; cursor:pointer; z-index:3; padding:0;
+    transition:transform .2s ease, opacity .4s ease;
+  }
+  .envelope-stamp:active{ transform:scale(.9); }
+
+  .envelope.opened .envelope-flap{ transform:translateX(-50%) rotateX(180deg); }
+  .envelope.opened .envelope-letter{ transform:translateY(-46%); }
+  .envelope.opened .envelope-stamp{ opacity:0; pointer-events:none; }
+
+  .intro-hint{
+    margin-top:26px; font-size:.85rem; color:var(--gold-soft);
+    animation:hintPulse 1.8s ease-in-out infinite;
+    transition:opacity .3s ease;
+  }
+  @keyframes hintPulse{ 0%,100%{ opacity:.5; } 50%{ opacity:1; } }
 </style>
 </head>
 <body>
+
+<div class="intro-overlay" id="introOverlay">
+  <div class="envelope-scene">
+    <div class="envelope" id="envelope">
+      <div class="envelope-pocket"></div>
+      <div class="envelope-letter" id="envelopeLetter">
+        <p class="envelope-letter-title">Happy Birthday</p>
+        <div class="envelope-letter-line"></div>
+        <div class="envelope-letter-line"></div>
+        <div class="envelope-letter-line short"></div>
+      </div>
+      <div class="envelope-flap" id="envelopeFlap"></div>
+      <button class="envelope-stamp" id="envelopeStamp" aria-label="Tap the stamp to open the letter"><span>❤</span></button>
+    </div>
+    <p class="intro-hint" id="introHint">tap the stamp to open</p>
+  </div>
+</div>
 
 <div class="hearts-bg" id="heartsBg"></div>
 
@@ -486,6 +572,22 @@
 
 
 <script>
+  // intro envelope — tap the stamp to open the letter, then reveal the site
+  const introOverlay = document.getElementById('introOverlay');
+  const envelope = document.getElementById('envelope');
+  const envelopeStamp = document.getElementById('envelopeStamp');
+  const introHint = document.getElementById('introHint');
+  envelopeStamp.addEventListener('click', ()=>{
+    envelope.classList.add('opened');
+    introHint.style.opacity = '0';
+    setTimeout(()=>{
+      introOverlay.classList.add('gone');
+      document.documentElement.classList.remove('intro-lock');
+      confettiBurst();
+    }, 900);
+    setTimeout(()=>{ introOverlay.remove(); }, 1700);
+  });
+
   // letter photo stack — tap to swap which photo is on top
   const letterStack = document.getElementById('letterStack');
   function swapStack(){
@@ -673,7 +775,7 @@
       setTimeout(()=>c.remove(), 4600);
     }
   }
-  setTimeout(confettiBurst, 500);
+  // confettiBurst() is now triggered when the envelope is opened (see top of script)
 </script>
 
 </body>
